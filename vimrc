@@ -9,12 +9,10 @@ syntax on
 set autoread
 set autowrite
 set noerrorbells
-"filetype plugin indent on
 
 "Dimensions
 set lines=50
 set columns=80
-set textwidth=80
 
 "Navigation
 set nu
@@ -30,10 +28,21 @@ set hlsearch
 set showmatch
 
 "Tabs and Indentation
+filetype plugin indent on
 set expandtab
 set tabstop=4
+set softtabstop=4
 set shiftwidth=4
 set autoindent
 
-"autocmd FileType javascript set tabstop=2
-"autocmd FileType javascript set shiftwidth=2
+"------------------------------------------------------------------------------
+"""LaTeX"""
+"TODO:
+" - Move over to tex.vim
+
+"Wrap lines over 80 characters long
+"autocmd BufEnter,BufRead *.tex setlocal textwidth=80
+
+"No auto-indentation
+autocmd BufEnter,BufRead *.tex setlocal noai nocin nosi inde=
+
