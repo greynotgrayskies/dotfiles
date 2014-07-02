@@ -9,6 +9,7 @@ syntax on
 set autoread
 set autowrite
 set noerrorbells
+set noswapfile
 
 "Dimensions
 set lines=50
@@ -46,3 +47,9 @@ set autoindent
 "No auto-indentation
 autocmd BufEnter,BufRead *.tex setlocal noai nocin nosi inde=
 
+nnoremap <C-l> <C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <bar><bar> :vsplit 
+nnoremap __ :split 

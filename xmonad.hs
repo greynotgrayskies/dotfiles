@@ -33,7 +33,8 @@ myManageHook = composeAll (
 
 -- Main
 main = xmonad $ gnomeConfig {
-    manageHook = myManageHook
+    focusFollowsMouse = False
+    , manageHook = myManageHook
     , normalBorderColor = "#004400"
     , focusedBorderColor = "#00FF00"
     }
