@@ -107,4 +107,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # Disable touchscreen, since it occasionally causes crashing
-xinput set-prop 'Atmel Atmel maXTouch Digitizer' 'Device Enabled' 0
+# TODO: Check whether or not this works after system restart
+#       Also, should probably be moved to .profile?
+
+# Temporarily disabled
+#xinput set-prop 'Atmel Atmel maXTouch Digitizer' 'Device Enabled' 0
