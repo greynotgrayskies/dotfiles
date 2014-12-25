@@ -12,8 +12,8 @@ set noerrorbells
 set noswapfile
 
 "Dimensions
-set lines=50
-set columns=80
+"set lines=50
+"set columns=80
 
 "Navigation
 set nu
