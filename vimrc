@@ -37,7 +37,7 @@ set shiftwidth=4
 set autoindent
 
 "------------------------------------------------------------------------------
-"""LaTeX"""
+"LaTeX
 "TODO:
 " - Move over to tex.vim
 
@@ -47,9 +47,20 @@ set autoindent
 "No auto-indentation
 autocmd BufEnter,BufRead *.tex setlocal noai nocin nosi inde=
 
+"------------------------------------------------------------------------------
+"Buffer Management
+
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <bar><bar> :vsplit 
 nnoremap __ :split 
+nnoremap = :bnext<return>
+nnoremap - :bprev<return>
+nnoremap ++ :edit 
+nnoremap <del><del> :bp\|bd #<return>
+
+"Filetypes"
+au BufRead,BufNewFile *.md set filetype=markdown
+
