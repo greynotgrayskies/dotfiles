@@ -3,6 +3,49 @@
 # Adapted from: 
 # https://github.com/albert12132/dotfiles/blob/master/bash-files/bash_prompt
 
+# Bash provides an environment variable called `PROMPT_COMMAND`. The contents
+# of this variable are executed as a regular Bash command just before Bash
+# displays a prompt.
+# http://www.tldp.org/HOWTO/Bash-Prompt-HOWTO/x264.html
+promptCommand() {
+    # Needs to be done first, since otherwise we might lose the exit code.
+    local EXIT_CODE=$?
+
+    local EXIT_STATUS
+    local GIT_PROMPT
+    local WORK_DIRECTORY
+    local PROMPT
+
+    # Exit Status Display
+    if [[ ${EXIT_CODE} != 0 ]]; then
+        EXIT_STATUS="${DEFAULT}${RED}${BOLD}(exit status: ${EXIT_CODE})\n"
+    fi
+
+    # Git Display
+    if $(isGitRepo); then
+        local GIT_BRANCH=$(git branch 2> /dev/null | sed -n 's/^\* //p')
+        GIT_PROMPT="${DEFAULT} "
+        if [[ $(gitStatus) -eq 0 ]]; then
+            GIT_PROMPT+="(${LIGHT_GREEN}${BOLD}"'$(gitBranch)'"${DEFAULT})"
+        else
+            GIT_PROMPT+="(${GOLD}${BOLD}"'$(gitBranch)'"${DEFAULT})"
+        fi    
+    fi
+
+    WORK_DIRECTORY="${DEFAULT}${GOLD}\u@\h:${DEFAULT}\w"
+    PROMPT="${DEFAULT}${LIGHT_GREEN}${BOLD}\$${DEFAULT} "
+
+    export PS1="${EXIT_STATUS}${WORK_DIRECTORY}${GIT_PROMPT}\n${PROMPT}"
+
+    # Clear any previous formatting
+    echo -ne "\e[0m"
+}
+
+# Should be a triangle? May not appear correctly until the powerline font is
+# actually properly installed.
+# http://askubuntu.com/questions/283908/how-can-i-install-and-use-powerline-plugin
+SEPARATOR="\uE0B0"
+
 if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null
 then
     # We have color support; assume it's compliant with Ecma-48
@@ -34,45 +77,57 @@ gitStatus() {
     echo $changes
 }
 
-gitPrompt() {
-    PROMPT=
-    if isGitRepo
-    then
-        if isVirtualEnv ; then PROMPT+='-' ; fi
-        PROMPT+="(${WHITE}"'$(gitBranch)'"${NO_COLOR})"
-        PROMPT+='-($(gitStatus))'
-        PROMPT+=' '
+# Outputs a message containing the exit code of a previous command if it
+# resulted in a non-zero exit code
+exitStatusPrompt() {
+    EXIT_CODE=$?
+    if [[ ${EXIT_CODE} != 0 ]]; then
+        echo "${RED}(exit status: ${EXIT_CODE})\n"
     fi
-    echo $PROMPT
 }
 
-usingVim() {
-    local processes=`ps -T`
-    echo $processes | grep -q 'vim'
+# Fancy Terminal Colors (more than necessary)
+# https://en.wikipedia.org/wiki/ANSI_escape_code
+#
+# Gnome Terminal apparently can support 24-bit colors, but requires to be
+# linked against libvte >= 0.36, so it doesn't work in Ubuntu 14.04. Can't be
+# bothered at the moment.
+# http://askubuntu.com/questions/512525/how-to-enable-24bit-true-color-support-in-gnome-terminal
+
+# Returns the ANSI control sequence 
+rgb() {
+    expr 16 + 36 \* $1 + 6 \* $2 + $3
 }
 
+# Returns the ANSI control sequence for a foreground color for an rgb value.
+fgcolor() {
+    echo "\e[38;5;$(rgb $1 $2 $3)m"
+}
+    
+# Returns the ANSI control sequence for a background color for an rgb value.
+bgcolor() {
+    echo "\e[48;5;$(rgb $1 $2 $3)m"
+}
 
 if [ "$color_prompt" = yes ]; then
-    LIGHT_GREEN='\[\033[1;32m\]'
-    GREEN='\[\033[32m\]'
-    RED='\[\033[1;31m\]'
-    WHITE='\[\033[1;37m\]'
-    GREY='\[\033[37m\]'
-    BROWN='\[\033[0;33m\]'
-    NO_COLOR='\[\033[00m\]'
+    # Control sequences need to be wrapped in '\[' and '\]', or else inputs
+    # that exceed one line may wrap over incorrectly by overwriting the
+    # characters at the beginning of the current line.
 
-    PS1=
-    PS1+="$BROWN\w$NO_COLOR"
-    PS1+="\$(isGitRepo && \
-            if [ \"\$(gitStatus)\" = \"0\" ] ; then \
-                echo -n \" (${GREEN}\$(gitBranch)${NO_COLOR})\" ; \
-            else
-                echo -n \" (${GREY}\$(gitBranch)${NO_COLOR})\" ; \
-            fi
-         )"
-    PS1+="$LIGHT_GREEN\$$NO_COLOR "
-else
-    PS1="\@ \w\$(isGitRepo && echo -n \"(gitBranch)\")\$ "
+    # Fonts
+    DEFAULT="\[\e[0m\]"
+    BOLD="\[\e[1m\]"
+    UNDER="\[\e[4m\]"
+    INVERT="[\e[7m\]"
+
+    # Font Colors
+    GREY="\[$(fgcolor 2 2 2)\]"
+    RED="\[$(fgcolor 5 0 0)\]"
+    GOLD="$(fgcolor 5 3 0)"
+    LIGHT_GREEN="\[$(fgcolor 0 5 0)\]"
+    BROWN="\[$(fgcolor 3 2 0)\]"
 fi
+
+PROMPT_COMMAND=promptCommand
 
 unset color_prompt force_color_prompt
