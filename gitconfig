@@ -1,5 +1,5 @@
 [user]
-	email = jeffreylu017@gmail.com
-	name = Jeffrey Lu
+  name = Jeffrey Lu
+  email = jeffreylu017@gmail.com
 [core]
-	editor = vim
+  editor = vim

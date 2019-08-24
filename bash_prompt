@@ -1,6 +1,6 @@
 # Sets bash prompt
-# 
-# Adapted from: 
+#
+# Adapted from:
 # https://github.com/albert12132/dotfiles/blob/master/bash-files/bash_prompt
 
 # Bash provides an environment variable called `PROMPT_COMMAND`. The contents
@@ -15,30 +15,34 @@ promptCommand() {
     local GIT_PROMPT
     local WORK_DIRECTORY
     local PROMPT
+    local DATE
+    local VIRTUALENV_INDICATOR
 
     # Exit Status Display
     if [[ ${EXIT_CODE} != 0 ]]; then
-        EXIT_STATUS="${DEFAULT}${RED}${BOLD}(exit status: ${EXIT_CODE})\n"
+        EXIT_STATUS="${BOLD_RED}(exit status: ${EXIT_CODE})\n"
     fi
 
     # Git Display
     if $(isGitRepo); then
         local GIT_BRANCH=$(git branch 2> /dev/null | sed -n 's/^\* //p')
-        GIT_PROMPT="${DEFAULT} "
+        GIT_PROMPT=" "
         if [[ $(gitStatus) -eq 0 ]]; then
-            GIT_PROMPT+="(${LIGHT_GREEN}${BOLD}"'$(gitBranch)'"${DEFAULT})"
+            GIT_PROMPT+="${DEFAULT}(${GREEN}"'$(gitBranch)'"${DEFAULT})"
         else
-            GIT_PROMPT+="(${GOLD}${BOLD}"'$(gitBranch)'"${DEFAULT})"
-        fi    
+            GIT_PROMPT+="${DEFAULT}(${YELLOW}"'$(gitBranch)'"${DEFAULT})"
+        fi
     fi
 
-    WORK_DIRECTORY="${DEFAULT}${GOLD}\u@\h:${DEFAULT}\w"
-    PROMPT="${DEFAULT}${LIGHT_GREEN}${BOLD}\$${DEFAULT} "
+    if isVirtualEnv; then
+      VIRTUALENV_INDICATOR=" ${DEFAULT}(${GREY}$(basename ${VIRTUAL_ENV})${DEFAULT})"
+    fi
 
-    export PS1="${EXIT_STATUS}${WORK_DIRECTORY}${GIT_PROMPT}\n${PROMPT}"
+    DATE="${BOLD_BLACK}$(date +%c)\n"
+    WORK_DIRECTORY="${YELLOW}\u@\h:${DEFAULT}\w"
+    PROMPT="${BOLD_GREEN}\$${DEFAULT} "
 
-    # Clear any previous formatting
-    echo -ne "\e[0m"
+    export PS1="${DEFAULT}${EXIT_STATUS}${DATE}${WORK_DIRECTORY}${GIT_PROMPT}${VIRTUALENV_INDICATOR}\n${PROMPT}"
 }
 
 # Should be a triangle? May not appear correctly until the powerline font is
@@ -57,10 +61,7 @@ else
 fi
 
 isVirtualEnv() {
-    if env | grep -q 'VIRTUAL_ENV='
-    then
-        echo '-'
-    fi
+    env | grep -q 'VIRTUAL_ENV='
 }
 
 isGitRepo() {
@@ -69,7 +70,7 @@ isGitRepo() {
 
 gitBranch() {
     local branch=$(git branch 2> /dev/null | sed -n 's/^\* //p')
-    if [ -n "$branch" ] ; then echo $branch ; fi
+    if [ -n "$branch" ] ; then echo $branch ; else echo "no commits"; fi
 }
 
 gitStatus() {
@@ -94,19 +95,14 @@ exitStatusPrompt() {
 # bothered at the moment.
 # http://askubuntu.com/questions/512525/how-to-enable-24bit-true-color-support-in-gnome-terminal
 
-# Returns the ANSI control sequence 
-rgb() {
-    expr 16 + 36 \* $1 + 6 \* $2 + $3
+# Returns the ANSI control sequence for a 24-bit foreground color.
+fgcolor() {
+    echo "\e[38;2;$1;$2;$3m"
 }
 
-# Returns the ANSI control sequence for a foreground color for an rgb value.
-fgcolor() {
-    echo "\e[38;5;$(rgb $1 $2 $3)m"
-}
-    
-# Returns the ANSI control sequence for a background color for an rgb value.
+# Returns the ANSI control sequence for a 24-bit background color.
 bgcolor() {
-    echo "\e[48;5;$(rgb $1 $2 $3)m"
+    echo "\e[48;2;$1;$2;$3m"
 }
 
 if [ "$color_prompt" = yes ]; then
@@ -118,14 +114,31 @@ if [ "$color_prompt" = yes ]; then
     DEFAULT="\[\e[0m\]"
     BOLD="\[\e[1m\]"
     UNDER="\[\e[4m\]"
-    INVERT="[\e[7m\]"
+    INVERT="\[\e[7m\]"
 
     # Font Colors
-    GREY="\[$(fgcolor 2 2 2)\]"
-    RED="\[$(fgcolor 5 0 0)\]"
-    GOLD="$(fgcolor 5 3 0)"
-    LIGHT_GREEN="\[$(fgcolor 0 5 0)\]"
-    BROWN="\[$(fgcolor 3 2 0)\]"
+    # 3/4 Bit Colors
+    # The bold font implicitly changes the color, so it's not recommended to use
+    # these colors in conjunction with it.
+    BLACK="\[\e[0;30m\]"
+    RED="\[\e[0;31m\]"
+    GREEN="\[\e[0;32m\]"
+    YELLOW="\[\e[0;33m\]"
+    BLUE="\[\e[0;34m\]"
+    MAGENTA="\[\e[0;35m\]"
+    CYAN="\[\e[0;36m\]"
+    WHITE="\[\e[0;37m\]"
+    BOLD_BLACK="\[\e[1;30m\]"
+    BOLD_RED="\[\e[1;31m\]"
+    BOLD_GREEN="\[\e[1;32m\]"
+    BOLD_YELLOW="\[\e[1;33m\]"
+    BOLD_BLUE="\[\e[1;34m\]"
+    BOLD_MAGENTA="\[\e[1;35m\]"
+    BOLD_CYAN="\[\e[1;36m\]"
+    BOLD_WHITE="\[\e[1;37m\]"
+
+    # 24-bit Colors
+    GREY="\[$(fgcolor 128 128 128)\]"
 fi
 
 PROMPT_COMMAND=promptCommand
