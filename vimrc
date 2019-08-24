@@ -3,6 +3,7 @@ runtime! debian.vim
 "------------------------------------------------------------------------------
 """Syntax Highlighting, Font and Color Scheme"""
 syntax on
+colorscheme peachpuff
 
 "------------------------------------------------------------------------------
 """General Settings"""
@@ -11,30 +12,39 @@ set autowrite
 set noerrorbells
 set noswapfile
 
-"Dimensions
-"set lines=50
-"set columns=80
-
-"Navigation
+"""Navigation"""
 set nu
 set scrolloff=5
 set mouse=a
 set mousehide
 
-"Search
+"""Search"""
 set ignorecase
 set smartcase
 set incsearch
 set hlsearch
 set showmatch
 
-"Tabs and Indentation
+"""Tabs and Indentation"""
 filetype plugin indent on
 set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
+set smarttab
 set autoindent
+
+"""Text Formatting"""
+"Set line width to 80
+set textwidth=80
+set colorcolumn=81
+hi ColorColumn ctermbg=blue
+set formatoptions=q
+
+"Show tabs and trailing spaces.
+set list
+set listchars=trail:_,tab:>>
+
 
 "------------------------------------------------------------------------------
 "LaTeX
@@ -48,8 +58,12 @@ set autoindent
 autocmd BufEnter,BufRead *.tex setlocal noai nocin nosi inde=
 
 "------------------------------------------------------------------------------
-"Buffer Management
+"""Keyboard shortcuts"""
 
+"Map Ctrl+backspace in insert mode to delete word.
+inoremap <C-H> <C-W>
+
+"Buffer Management
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
