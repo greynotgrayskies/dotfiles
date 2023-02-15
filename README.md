@@ -1,25 +1,17 @@
-i3
-==
+# Dotfiles
 
-Source: http://blog.hugochinchilla.net/2013/03/using-gnome-3-with-i3-window-manager/
+My personal dotfiles.
 
+I do some janky stuff (for my own entertainment) so use at your own risk.
+
+## Setup
+
+To install all required packages and set up all personal configurations, run:
 ```
-ln -s ~/dotfiles/i3-files ~/.i3
-sudo ln -s ~/.i3/gnome-i3.desktop /usr/share/xsessions/gnome-i3.desktop
-sudo ln -s ~/.i3/i3.session /usr/share/gnome-session/sessions/i3.session
-```
-
-Xmonad
-======
-
-Setting Up
-----------
-```
-sudo apt-get install gnome-settings-daemon gnome-panel
-sudo apt-get install xmonad
+$ make all
 ```
 
-Other Notes:
-------------
-
-  - Gnome panel settings can be found in `org.gnome.gnome-panel.layout`
+Alternatively, to just add dotfiles without installing required packages, run:
+```
+$ make all-dotfiles
+```
