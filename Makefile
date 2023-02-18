@@ -1,3 +1,4 @@
+include etc/Makefile
 include home/Makefile
 
 BIN = /usr/bin
