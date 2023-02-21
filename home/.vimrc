@@ -10,7 +10,11 @@ colorscheme peachpuff
 set autoread
 set autowrite
 set noerrorbells
-set noswapfile
+
+" Use swapfiles and store swapfiles in a specific directory, rather than the
+" same directory as the edited file.
+set swapfile
+set directory=~/.vim/swapfiles//
 
 """Navigation"""
 set nu
