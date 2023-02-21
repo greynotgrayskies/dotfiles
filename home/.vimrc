@@ -10,7 +10,9 @@ colorscheme peachpuff
 set autoread
 set autowrite
 set noerrorbells
-set noswapfile
+
+set swapfile
+set directory=~/.vim/swapfiles//
 
 """Navigation"""
 set nu
