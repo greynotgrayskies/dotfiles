@@ -3,7 +3,7 @@ runtime! debian.vim
 "------------------------------------------------------------------------------
 """Syntax Highlighting, Font and Color Scheme"""
 syntax on
-colorscheme peachpuff
+colorscheme dark-peachpuff
 
 "------------------------------------------------------------------------------
 """General Settings"""
