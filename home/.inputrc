@@ -3,3 +3,6 @@ $include /etc/inputrc
 # Tab-completing a directory symlink should have consistent behavior as
 # tab-completing a normal directory.
 set mark-symlinked-directories on
+
+# Map Ctrl+Backspace to Ctrl+W
+"\C-H":"\C-W"

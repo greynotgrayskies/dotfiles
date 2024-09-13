@@ -30,7 +30,7 @@ vim-dotfiles: ${HOME}/.vim ${HOME}/.vimrc
 # Ensure that bash prompt commands are loaded on bash startup.
 ${HOME}/.bashrc: ${HOME}/.bash_prompt
 	if ! (grep -q '. ~/.bash_prompt' $@); then\
-		echo '\n# Set prompt\n. ~/.bash_prompt' >> ${HOME}/.bashrc;\
+		echo -e '\n# Set prompt\n. ~/.bash_prompt' >> ${HOME}/.bashrc;\
 	fi
 	touch $@
 
