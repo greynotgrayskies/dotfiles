@@ -39,7 +39,7 @@ promptCommand() {
     fi
 
     DATE="${LIGHT_BLACK}$(date +%c)\n"
-    WORK_DIRECTORY="${YELLOW}\u@\h:${DEFAULT}\w"
+    WORK_DIRECTORY="${YELLOW}\u@\H:${DEFAULT}\w"
     PROMPT="${BOLD}${LIGHT_GREEN}\$${DEFAULT} "
 
     export PS1="${DEFAULT}${EXIT_STATUS}${DATE}${WORK_DIRECTORY}${GIT_PROMPT}${VIRTUALENV_INDICATOR}\n${PROMPT}"
